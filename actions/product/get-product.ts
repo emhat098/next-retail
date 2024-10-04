@@ -3,17 +3,19 @@
 import prisma from '@/prisma/db';
 import { Product } from '@/types';
 
-const getProducts = async (): Promise<Product[] | undefined> => {
+const getProducts = async (where: object = {}): Promise<Product[] | undefined> => {
   try {
     const products = await prisma.product.findMany({
-      where: {
-        isDeleted: false
-      },
+      where,
       select: {
         id: true,
         sku: true,
         name: true,
         price: true,
+        isDeleted: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       }
     });
 

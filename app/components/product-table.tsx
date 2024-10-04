@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/table"
 import { FC } from "react";
 import { Product } from "@/types";
-import EditProductButton from "@/app/products/components/edit-product-button";
-import DeleteProductButton from "./delete-product-button";
-import HideProductButton from "./hide-product-button";
+import AddToCart from "@/components/shopping-cart/add-to-cart";
 
 interface ProductTableProps {
   title: string;
   products: Product[];
+  actions?: React.ReactElement;
 }
 
-const ProductTable: FC<ProductTableProps> = ({title, products }) => {
+const ProductTable: FC<ProductTableProps> = ({title, products, actions }) => {
   return (
     <Table className={'bg-white shadow rounded-lg'}>
       <TableCaption>{title}</TableCaption>
@@ -29,29 +28,24 @@ const ProductTable: FC<ProductTableProps> = ({title, products }) => {
           <TableHead className="w-[100px]">SKU</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Price</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {(!products || products.length === 0) && (
           <TableRow>
-            <TableCell className={"text-center"} colSpan={4}>
+            <TableCell className={"text-center"} colSpan={3 + (actions ? 1 : 0)}>
               No found product.
             </TableCell>
           </TableRow>
         )}
         {products && products.length > 0 && products.map((product) => (
           <TableRow key={product.id}>
-            <TableCell className="font-medium">
-              <EditProductButton title={product.sku} id={product.id} />
-            </TableCell>
+            <TableCell className="font-medium">{product.sku}</TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.price}</TableCell>
-            <TableCell>
-              <div className="flex gap-1 flex-wrap">
-                <HideProductButton isDeleted={product.isDeleted} id={product.id} />
-                <DeleteProductButton id={product.id} />
-              </div>
+            <TableCell className="text-right">
+              <AddToCart product={product} />
             </TableCell>
           </TableRow>
         ))}

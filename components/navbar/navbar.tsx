@@ -26,7 +26,7 @@ const Navbar = () => {
           </SheetDescription>
           <nav className="flex flex-col mt-4" onClick={() => setOpen(!isOpen)}>
             <NavItem
-              href="/"
+              href="/products"
               icon={<Package className="mr-2 h-4 w-4" />}
             >
               {"Products"}

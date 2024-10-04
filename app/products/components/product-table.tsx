@@ -1,22 +1,22 @@
 'use server';
 
 import getProducts from "@/actions/product/get-product";
-import ProductTable from "@/components/product/product-table";
+import ProductList from "@/components/product/product-table";
 import { Product } from "@/types";
 
-const ProductTableRSC = async () => {
+const ProductTable = async () => {
   const products = await getProducts();
 
   if (!products) {
-    return <div>Something went wrong.</div>
+    return <div>No found product</div>
   }
 
   return (
-    <ProductTable
+    <ProductList
       title={'A list of products.'}
       products={products as Product[] ?? []}
     />
   )
 };
 
-export default ProductTableRSC;
+export default ProductTable;

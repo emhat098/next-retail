@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import Navbar from "@/components/navbar/navbar";
 import ShoppingCartProvider from "@/providers/shopping-cart-provider";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from 'nextjs-toploader';
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -14,6 +15,7 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html suppressHydrationWarning>
       <body className={roboto.className}>
+        <NextTopLoader color={'black'} showSpinner={false} />
         <ShoppingCartProvider>
           <Navbar />
           <main className="flex flex-col bg-gray-100 p-4">

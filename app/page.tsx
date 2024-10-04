@@ -1,6 +1,6 @@
 
 import SearchingBar from "@/components/product/searching-bar";
-import ProductTableRSC from "./components/product-table-rsc";
+import OrderProductTable from "./components/order-product-table";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
@@ -17,7 +17,7 @@ export default function Home() {
       <div className="flex flex-col gap-4 items-center justify-center">
         <SearchingBar />
         <Suspense fallback={<div>Loading ....</div>}>
-          <ProductTableRSC />
+          <OrderProductTable />
         </Suspense>
       </div>
       <h2 className={"text-2xl font-bold"}>New Order</h2>

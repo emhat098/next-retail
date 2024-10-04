@@ -9,7 +9,6 @@ import { Button } from '../ui/button';
 import SelectedProducts from './selected-product';
 import { useContext } from 'react';
 import { ShoppingCartContext } from '@/providers/shopping-cart-provider';
-import createOrder from '@/actions/order/create-order';
 import { Order } from '@/types';
 import { toast } from 'sonner';
 
