@@ -5,27 +5,23 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "../ui/button";
+import { FC } from "react";
+import { Product } from "@/types";
+import AddToCart from "../shopping-cart/add-to-cart";
 
-const products: IProduct[] = [
-  {
-    id: "1",
-    name: "Product 1",
-    price: 200000,
-    sku: "INV001"
-  },
-  
-]
+interface ProductTableProps {
+  title: string;
+  products: Product[];
+}
 
-const ProductTable = () => {
+const ProductTable: FC<ProductTableProps> = ({title, products }) => {
   return (
     <Table className={'bg-white shadow rounded-lg'}>
-      <TableCaption>A list of products.</TableCaption>
+      <TableCaption>{title}</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">SKU</TableHead>
@@ -35,13 +31,20 @@ const ProductTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {products.map((product) => (
+        {(!products || products.length === 0) && (
+          <TableRow>
+            <TableCell className={"text-center"} colSpan={4}>
+              No found product.
+            </TableCell>
+          </TableRow>
+        )}
+        {products && products.length > 0 && products.map((product) => (
           <TableRow key={product.id}>
             <TableCell className="font-medium">{product.sku}</TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell className="text-right">
-              <Button size={'sm'}>Add to cart</Button>
+              <AddToCart product={product} />
             </TableCell>
           </TableRow>
         ))}

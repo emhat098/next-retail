@@ -6,6 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import SelectedProducts from './selected-product';
+import { useContext } from 'react';
+import { ShoppingCartContext } from '@/providers/shopping-cart-provider';
+import createOrder from '@/actions/order/create-order';
+import { Order } from '@/types';
+import { toast } from 'sonner';
 
 const customerSchema = z.object({
   fullName: z.string().min(1, {
@@ -21,6 +27,8 @@ const customerSchema = z.object({
 });
 
 const CustomerOrderForm = () => {
+  const { totalItem, carts, clearCart } = useContext(ShoppingCartContext);
+
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -31,8 +39,34 @@ const CustomerOrderForm = () => {
     }
   })
 
-  const onSubmit = (values: z.infer<typeof customerSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof customerSchema>) => {
+    try {
+      const order: Order = {
+        customer: {
+          address: values.address,
+          fullName: values.fullName,
+          phoneNumber: values.phoneNumber,
+        },
+        orders: carts.map(c => ({
+          product: c.product,
+          quantity: c.quantity,
+        })),
+        note: values.note ?? '',
+      };
+      const res = await fetch('/api/order/create', {
+        method: 'POST',
+        body: JSON.stringify(order),
+      });
+      if (res.ok) {
+        toast.success(res.statusText);
+        clearCart();
+        form.reset();
+      } else {
+        toast.success('Place order is failed. Something went wrong!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -44,7 +78,7 @@ const CustomerOrderForm = () => {
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Full name</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -91,9 +125,14 @@ const CustomerOrderForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <SelectedProducts />
+          <div className='flex gap-2'>
+            <Button disabled={totalItem === 0} type="submit">Place order</Button>
+            <Button disabled={totalItem === 0} type="submit" variant={'outline'}>Place order & Print</Button>
+          </div>
         </form>
       </Form>
+      
     </div>
   )
 }
