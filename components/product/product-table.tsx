@@ -1,62 +1,53 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { FC } from "react";
 import { Product } from "@/types";
 import EditProductButton from "@/app/products/components/edit-product-button";
 import DeleteProductButton from "./delete-product-button";
 import HideProductButton from "./hide-product-button";
+import { ColumnDef } from '@tanstack/react-table';
+import CommonTable from "../table/common-table";
+import { FC } from "react";
+
+const columns: ColumnDef<Product>[] = [
+  {
+    header: 'SKU',
+    accessorKey: 'sku',
+  },
+  {
+    header: 'Name',
+    accessorKey: 'name',
+    cell: ({row}) => {
+      return <>
+        <EditProductButton id={row.original.id} title={row.original.name} />
+      </>
+    }
+  },
+  {
+    header: 'Price',
+    accessorKey: 'price',
+  },
+  {
+    header: 'Actions',
+    accessorKey: '',
+    cell: ({row}) => {
+      return (
+        <div className="flex gap-1">
+          <HideProductButton id={row.original.id} isDeleted={row.original.isDeleted} />
+          <DeleteProductButton id={row.original.id} />
+        </div>
+      )
+    }
+  },
+];
 
 interface ProductTableProps {
   title: string;
   products: Product[];
 }
 
-const ProductTable: FC<ProductTableProps> = ({title, products }) => {
+const ProductTable: FC<ProductTableProps> = ({ title, products }) => {
   return (
-    <Table className={'bg-white shadow rounded-lg'}>
-      <TableCaption>{title}</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">SKU</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {(!products || products.length === 0) && (
-          <TableRow>
-            <TableCell className={"text-center"} colSpan={4}>
-              No found product.
-            </TableCell>
-          </TableRow>
-        )}
-        {products && products.length > 0 && products.map((product) => (
-          <TableRow key={product.id}>
-            <TableCell className="font-medium">
-              <EditProductButton title={product.sku} id={product.id} />
-            </TableCell>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>{product.price}</TableCell>
-            <TableCell>
-              <div className="flex gap-1 flex-wrap">
-                <HideProductButton isDeleted={product.isDeleted} id={product.id} />
-                <DeleteProductButton id={product.id} />
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <CommonTable columns={columns} data={products} tableCaption={title} />
   )
 }
 

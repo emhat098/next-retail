@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -98,7 +99,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={title ? "link" : "outline"}>{title ?? "Add a product"}</Button>
+        <Button className={cn(title ? 'underline p-0' : '')} variant={title ? "link" : "outline"}>{title ?? "Add a product"}</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[360px]">
         <DialogHeader>
