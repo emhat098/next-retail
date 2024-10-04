@@ -2,6 +2,7 @@
 
 import { Product } from "@/types";
 import prisma from '@/prisma/db';
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const createProduct = async (product: Product) => {
   try {
@@ -25,10 +26,13 @@ const createProduct = async (product: Product) => {
         }
       });
     }
-   
     return result;
   } catch (error) {
-    console.log(error);
+    if (error instanceof PrismaClientKnownRequestError) {
+      return {
+        error: 'SKU is unique. Please choose other SKU.'
+      };
+    }
   }
 }
 

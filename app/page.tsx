@@ -9,7 +9,15 @@ const CustomerOrderForm = dynamic(() => import("@/components/customer/order-form
   loading: () => <div className="text-sm">Loading customer information ...</div>
 });
 
-export default function Home() {
+
+interface Params {
+  searchParams: {
+    q: string;
+  }
+}
+
+export default function OrderProductPage({ searchParams }: Params) {
+  const { q } = searchParams;
   return (
     <>
       <h2 className={"text-2xl font-bold"}>Products</h2>
@@ -17,7 +25,7 @@ export default function Home() {
       <div className="flex flex-col gap-4 items-center justify-center">
         <SearchingBar />
         <Suspense fallback={<div>Loading ....</div>}>
-          <OrderProductTable />
+          <OrderProductTable q={q} />
         </Suspense>
       </div>
       <h2 className={"text-2xl font-bold"}>New Order</h2>

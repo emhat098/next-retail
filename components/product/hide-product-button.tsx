@@ -16,7 +16,7 @@ const HideProductButton: FC<HideProductButtonProps> = ({id, isDeleted}) => {
 
   const onDelete = async () => {
     try {
-      const result = await hideProductByid(id);
+      const result = await hideProductByid(id, !isDeleted);
       if (result) {
         toast.success(`Product is ${isDeleted ? 'displayed' : 'hidden'} successfully`);
         router.refresh();

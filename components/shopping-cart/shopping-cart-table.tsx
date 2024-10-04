@@ -1,19 +1,8 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { FC, useContext } from "react";
 import { Button } from "../ui/button";
 import { ShoppingCartContext } from "@/providers/shopping-cart-provider";
-import { Badge } from "../ui/badge";
 import { TrashIcon } from "lucide-react";
 import CommonTable from "../table/common-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -81,15 +70,7 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
 interface ShoppingCartTableProps {}
 
 const ShoppingCartTable: FC<ShoppingCartTableProps> = () => {
-  const { carts, removeFromCart, totalItem, totalPrice} = useContext(ShoppingCartContext);
-
-  if (!carts || carts.length === 0) {
-    return (
-      <div className="text-center w-full">
-        <Badge variant={'destructive'} className={'text-sm font-light w-full rounded'}>No found cart item.</Badge>
-      </div>
-    )
-  }
+  const { carts } = useContext(ShoppingCartContext);
 
   return (
     <CommonTable

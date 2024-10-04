@@ -88,7 +88,12 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
       if (res.ok) {
         toast.success(res.statusText);
         setOpen(false);
+        form.reset();
         router.refresh();
+      } else {
+        form.setError('sku', {
+          message: res.statusText,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +122,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
                 <FormItem>
                   <FormLabel>SKU</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input disabled={Boolean(id)} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
