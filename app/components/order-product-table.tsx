@@ -4,6 +4,7 @@ import getProducts from "@/actions/product/get-product";
 import { Product } from "@/types";
 import ProductTable from "./product-table";
 
+
 const OrderProductTable = async () => {
   const products = await getProducts();
 
@@ -13,7 +14,6 @@ const OrderProductTable = async () => {
 
   return (
     <ProductTable
-      title={'A list of products.'}
       products={products as Product[] ?? []}
     />
   )

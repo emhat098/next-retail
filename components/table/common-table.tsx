@@ -5,6 +5,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -67,6 +68,20 @@ const CommonTable: FC<CommonTableProps<any>> = <T, >({ data, columns, tableCapti
           </TableRow>
         )}
       </TableBody>
+      <TableFooter>
+        {table.getFooterGroups().map(footerGroup => (
+          <TableRow key={footerGroup.id}>
+            {footerGroup.headers.map(footer => (
+              <TableCell key={footer.id}>
+                {footer.isPlaceholder ? null : flexRender(
+                  footer.column.columnDef.footer,
+                  footer.getContext(),
+                )}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableFooter>
     </Table>
   )
 }
