@@ -11,7 +11,9 @@ const Navbar = () => {
 
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md">
-      <h1 className="text-2xl font-bold text-gray-800">Next Retail</h1>
+      <h1 className="text-2xl font-bold text-gray-800">
+        <Link href={'/'}>Next Retail</Link>
+      </h1>
       <Sheet modal={true} open={isOpen} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon">

@@ -1,37 +1,27 @@
 'use server';
 
-import getProducts from "@/actions/product/get-product";
+import getProducts, { defaultGetProductOrderBy, defaultGetProductWhere } from "@/actions/product/get-product";
 import { Product } from "@/types";
 import ProductTable from "./product-table";
 import { FC } from "react";
+import { MAX_ITEM_PER_PAGE_ORDER } from "@/next.constants.mjs";
+import { DataWithPagination } from "@/types/pagination";
 
 interface OrderProductTableProps {
   q: string;
 }
 
 const OrderProductTable: FC<OrderProductTableProps> = async ({ q }) => {
-  const where = q ? {
-    OR: [
-      {
-        sku: {
-          contains: q,
-          mode: 'insensitive'
-        },
-      },
-      {
-        name: {
-          contains: q,
-          mode: 'insensitive'
-        },
-      }
-    ]
-  } : {};
+  const products = q ? await getProducts(
+    defaultGetProductWhere(q),
+    MAX_ITEM_PER_PAGE_ORDER,
+    defaultGetProductOrderBy
+  ): {
+    data: []
+  };
 
-  const products = q ? await getProducts(where) : []; 
   return (
-    <ProductTable
-      products={products as Product[] ?? []}
-    />
+    <ProductTable products={products?.data ?? []} />
   )
 };
 
