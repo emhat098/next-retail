@@ -61,8 +61,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
   });
 
   useEffect(() => {
-    if (id) {
-      console.log('Edit product called');
+    if (id && isOpen) {
       fetch('/api/product/get/' + id)
         .then(res => res.json())
         .then(res => {
@@ -73,7 +72,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
           console.log(err);
         })
     }
-  }, [id])
+  }, [id, isOpen])
 
   const onSubmit = async (values: ProductSchemaType) => {
     try {

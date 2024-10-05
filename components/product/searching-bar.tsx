@@ -6,9 +6,11 @@ import { Input } from "../ui/input"
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from '@uidotdev/usehooks'
 
-interface SearchingBarProps extends PropsWithChildren {}
+interface SearchingBarProps extends PropsWithChildren {
+  placeholder?: string;
+}
 
-const SearchingBar: FC<SearchingBarProps> = ({children}) => {
+const SearchingBar: FC<SearchingBarProps> = ({ placeholder, children }) => {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') ?? '');
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
@@ -39,7 +41,7 @@ const SearchingBar: FC<SearchingBarProps> = ({children}) => {
         value={searchTerm}
         className={'bg-white'}
         type="text"
-        placeholder="Search product by title or sku..."
+        placeholder={placeholder ?? ''}
         onChange={handleChange}
       />
       <Button type="button" size={'sm'} onClick={onSearch}>Search</Button>

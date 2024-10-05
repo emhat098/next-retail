@@ -55,11 +55,18 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
     }
   },
   {
-    header: 'Actions',
+    accessorKey: 'actions',
+    header: () => {
+      return (
+        <div className="no-print">
+          Actions
+        </div>
+      )
+    },
     cell: ({row}) => {
       const { removeFromCart } = useContext(ShoppingCartContext);
       return (
-        <div>
+        <div className="no-print">
           <RemoveCartButton removeFromCart={() => removeFromCart(row.original.product.id)} />
         </div>
       )

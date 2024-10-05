@@ -5,8 +5,7 @@ import ShoppingCartTable from "../shopping-cart/shopping-cart-table";
 const SelectedProducts = () => {
   return (
     <>
-      <h3 className={'font-bold text-xl'}>Selected products</h3>
-      <hr />
+      <h3 className={'font-bold text-xl print:text-sm'}>Ordered items</h3>
       <ShoppingCartTable />
     </>
   )

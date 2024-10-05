@@ -11,6 +11,7 @@ import { useContext } from 'react';
 import { ShoppingCartContext } from '@/providers/shopping-cart-provider';
 import { Order } from '@/types';
 import { toast } from 'sonner';
+import { Textarea } from '../ui/textarea';
 
 const customerSchema = z.object({
   fullName: z.string().min(1, {
@@ -68,66 +69,124 @@ const CustomerOrderForm = () => {
     }
   }
 
+  const handleOnPlaceOrderAndPrint = async () => {
+    window.print();
+    form.handleSubmit(onSubmit)();
+  }
+
   return (
     <div className='w-full bg-white p-2 rounded-md'>
+      <div className='print:flex flex-col gap-1 hidden'>
+        <div className='flex flex-col items-center'>
+          <h2 className='font-bold text-2xl text-center'>Next retail</h2>
+          <hr />
+          <div className={'text-sm font-bold'}>Shop information: </div>
+          <div className='text-sm'>Adress: Some where </div>
+          <div className='text-sm'>Phone: 099999999 </div>
+        </div>
+        <hr />
+        <div className='flex flex-col'>
+          <div className={'text-sm font-bold'}>Customer information: </div>
+          <div className='text-sm'>
+            <span className={'font-bold'}>Fullname: </span>
+            <span>{form.getValues('fullName')}</span>
+          </div>
+          <div className='text-sm'>
+            <span className={'font-bold'}>Phone number: </span>
+            <span>{form.getValues('phoneNumber')}</span>
+          </div>
+          <div className='text-sm'>
+            <span className={'font-bold'}>Address: </span>
+            <span>{form.getValues('address')}</span>
+          </div>
+          <div className='text-sm'>
+            <span className={'font-bold'}>Note: </span>
+            <span>{form.getValues('note')}</span>
+          </div>
+        </div>
+      </div>
       <Form {...form}>
-        <form className={'space-y-2'} onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone number</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Note</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className={'print:space-y-0 space-y-2 mb-4 print:hidden'}>
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full name</FormLabel>
+                  <FormControl>
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (form.getValues('fullName')) {
+                            document.title = 'Order: ' + form.getValues('fullName');
+                          }
+                        }}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                      <Input className={'print:py-0'} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Textarea rows={3} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Note</FormLabel>
+                  <FormControl>
+                      <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <hr />
+          </div>
           <SelectedProducts />
           <div className='flex gap-2'>
-            <Button disabled={totalItem === 0} type="submit">Place order</Button>
-            <Button disabled={totalItem === 0} type="submit" variant={'outline'}>Place order & Print</Button>
+            <Button
+              disabled={totalItem === 0}
+              type="submit"
+              className="print:hidden"
+            >
+              Place order
+            </Button>
+            <Button
+              disabled={totalItem === 0}
+              variant={'outline'}
+              onClick={handleOnPlaceOrderAndPrint}
+              className="print:hidden"
+            >
+              Place order & Print
+            </Button>
           </div>
         </form>
       </Form>

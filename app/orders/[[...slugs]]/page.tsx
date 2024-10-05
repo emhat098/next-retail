@@ -1,15 +1,8 @@
 
 import SearchingBar from "@/components/product/searching-bar";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/skeleton";
-import ProductTable from "../components/product-table";
+import OrderTable from "../components/order-table";
 import { MAX_ITEM_PER_PAGE } from "@/next.constants.mjs";
-
-const EditProductButton = dynamic(() => import("../components/edit-product-button"), {
-  ssr: false,
-  loading: () => <Skeleton className="w-40 h-10 rounded"></Skeleton>
-});
 
 interface Params {
   params: {
@@ -30,14 +23,12 @@ export default function ProductPage({params, searchParams}: Params) {
 
   return (
     <>
-      <h2 className={"text-2xl font-bold"}>Products</h2>
+      <h2 className={"text-2xl font-bold"}>Orders</h2>
       <hr className="my-2" />
       <div className="flex flex-col gap-4 items-center justify-center">
-        <SearchingBar placeholder={"Search product by title or sku..."}>
-          <EditProductButton />
-        </SearchingBar>
+        <SearchingBar placeholder={"Searching by phone number ..."} />
         <Suspense fallback={<div>Loading ....</div>}>
-          <ProductTable itemPerPage={itemPerPage} page={page} q={q} />
+          <OrderTable itemPerPage={itemPerPage} page={page} q={q} />
         </Suspense>
       </div>
     </>

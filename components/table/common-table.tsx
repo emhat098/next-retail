@@ -27,8 +27,8 @@ const CommonTable: FC<CommonTableProps<any>> = <T, >({ data, columns, tableCapti
   });
 
   return (
-    <Table className={'bg-white shadow rounded-lg'}>
-      <TableCaption>{tableCaption}</TableCaption>
+    <Table className={'bg-white shadow rounded-lg print:shadow-none print:rounded-none'}>
+      <TableCaption className="print:hidden">{tableCaption}</TableCaption>
       <TableHeader>
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>

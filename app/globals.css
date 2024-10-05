@@ -86,3 +86,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+
+  input {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .print-only {
+    display: inline-block;
+  }
+}
+

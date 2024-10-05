@@ -10,7 +10,7 @@ const Navbar = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="flex items-center justify-between p-4 bg-white shadow-md">
+    <header className="flex items-center justify-between p-4 bg-white shadow-md print:hidden">
       <h1 className="text-2xl font-bold text-gray-800">
         <Link href={'/'}>Next Retail</Link>
       </h1>

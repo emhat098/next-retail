@@ -7,7 +7,6 @@ import HideProductButton from "./hide-product-button";
 import { ColumnDef } from '@tanstack/react-table';
 import CommonTable from "../table/common-table";
 import { FC } from "react";
-import { TablePagination } from "./table-pagination";
 
 const columns: ColumnDef<Product>[] = [
   {
