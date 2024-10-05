@@ -1,6 +1,6 @@
 
 export interface BaseType {
   id?: string;
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt?: Date;
 }

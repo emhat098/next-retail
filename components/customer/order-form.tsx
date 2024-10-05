@@ -7,11 +7,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import SelectedProducts from './selected-product';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ShoppingCartContext } from '@/providers/shopping-cart-provider';
 import { Order } from '@/types';
 import { toast } from 'sonner';
 import { Textarea } from '../ui/textarea';
+import BillDialog from '../bill/dialog-bill';
 
 const customerSchema = z.object({
   fullName: z.string().min(1, {
@@ -28,6 +29,7 @@ const customerSchema = z.object({
 
 const CustomerOrderForm = () => {
   const { totalItem, carts, clearCart } = useContext(ShoppingCartContext);
+  const [isOpen, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
@@ -59,8 +61,6 @@ const CustomerOrderForm = () => {
       });
       if (res.ok) {
         toast.success(res.statusText);
-        clearCart();
-        form.reset();
       } else {
         toast.success('Place order is failed. Something went wrong!');
       }
@@ -70,44 +70,20 @@ const CustomerOrderForm = () => {
   }
 
   const handleOnPlaceOrderAndPrint = async () => {
-    window.print();
     form.handleSubmit(onSubmit)();
+  }
+
+  window.onafterprint = () => {
+    clearCart();
+    form.reset();
+    setOpen(false)
   }
 
   return (
     <div className='w-full bg-white p-2 rounded-md'>
-      <div className='print:flex flex-col gap-1 hidden'>
-        <div className='flex flex-col items-center'>
-          <h2 className='font-bold text-2xl text-center'>Next retail</h2>
-          <hr />
-          <div className={'text-sm font-bold'}>Shop information: </div>
-          <div className='text-sm'>Adress: Some where </div>
-          <div className='text-sm'>Phone: 099999999 </div>
-        </div>
-        <hr />
-        <div className='flex flex-col'>
-          <div className={'text-sm font-bold'}>Customer information: </div>
-          <div className='text-sm'>
-            <span className={'font-bold'}>Fullname: </span>
-            <span>{form.getValues('fullName')}</span>
-          </div>
-          <div className='text-sm'>
-            <span className={'font-bold'}>Phone number: </span>
-            <span>{form.getValues('phoneNumber')}</span>
-          </div>
-          <div className='text-sm'>
-            <span className={'font-bold'}>Address: </span>
-            <span>{form.getValues('address')}</span>
-          </div>
-          <div className='text-sm'>
-            <span className={'font-bold'}>Note: </span>
-            <span>{form.getValues('note')}</span>
-          </div>
-        </div>
-      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className={'print:space-y-0 space-y-2 mb-4 print:hidden'}>
+          <div className={'space-y-2 mb-4'}>
             <FormField
               control={form.control}
               name="fullName"
@@ -136,7 +112,7 @@ const CustomerOrderForm = () => {
                 <FormItem>
                   <FormLabel>Phone number</FormLabel>
                   <FormControl>
-                      <Input className={'print:py-0'} {...field} />
+                      <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,18 +151,25 @@ const CustomerOrderForm = () => {
             <Button
               disabled={totalItem === 0}
               type="submit"
-              className="print:hidden"
             >
               Place order
             </Button>
-            <Button
-              disabled={totalItem === 0}
-              variant={'outline'}
+            <BillDialog
+              order={{
+                customer: {
+                  fullName: form.getValues('fullName'),
+                  address: form.getValues('address'),
+                  phoneNumber: form.getValues('phoneNumber'),
+                },
+                note: form.getValues('note') ?? '',
+                createdAt: new Date(),
+                orders: carts,
+              }}
+              title={'Place order & Print'}
               onClick={handleOnPlaceOrderAndPrint}
-              className="print:hidden"
-            >
-              Place order & Print
-            </Button>
+              isOpen={isOpen}
+              setOpen={setOpen}
+            />
           </div>
         </form>
       </Form>

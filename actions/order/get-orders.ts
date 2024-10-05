@@ -31,7 +31,7 @@ const getOrders = async (
         id: true,
         customer: {
           select: {
-            fullname: true,
+            fullName: true,
             phoneNumber: true,
           }
         },

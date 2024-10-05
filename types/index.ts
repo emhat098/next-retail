@@ -1,4 +1,5 @@
 
+export * from './app.config';
 export * from './base';
 export * from './product';
 export * from './shopping-cart';

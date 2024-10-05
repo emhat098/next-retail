@@ -104,5 +104,8 @@
   .print-only {
     display: inline-block;
   }
-}
 
+  #closeDialog {
+    display: none !important;
+  }
+}

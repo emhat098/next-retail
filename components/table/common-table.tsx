@@ -68,20 +68,22 @@ const CommonTable: FC<CommonTableProps<any>> = <T, >({ data, columns, tableCapti
           </TableRow>
         )}
       </TableBody>
-      <TableFooter>
-        {table.getFooterGroups().map(footerGroup => (
-          <TableRow key={footerGroup.id}>
-            {footerGroup.headers.map(footer => (
-              <TableCell key={footer.id}>
-                {footer.isPlaceholder ? null : flexRender(
-                  footer.column.columnDef.footer,
-                  footer.getContext(),
-                )}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableFooter>
+      {table.getFooterGroups().length > 1 && (
+        <TableFooter>
+          {table.getFooterGroups().map(footerGroup => (
+            <TableRow key={footerGroup.id}>
+              {footerGroup.headers.map(footer => (
+                <TableCell key={footer.id}>
+                  {footer.isPlaceholder ? null : flexRender(
+                    footer.column.columnDef.footer,
+                    footer.getContext(),
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableFooter>
+      )}
     </Table>
   )
 }

@@ -1,12 +1,16 @@
 'use client';
 
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import Bill from "@/components/bill/bill";
+import BillDialog from "@/components/bill/dialog-bill";
 
-export const columns: ColumnDef<Order>[] = [
+const columns: ColumnDef<Order>[] = [
   {
     header: 'Full Name',
-    accessorKey: 'customer.fullname',
+    accessorKey: 'customer.fullName',
   },
   {
     header: 'Phone address',
@@ -18,9 +22,19 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({row}) => {
       return (
         <div>
-          {new Date(row.original.createdAt).toLocaleString()}
+          {new Date(row.original.createdAt ?? Date.now()).toLocaleString()}
         </div>
       )
     }
   },
+  {
+    header: 'Actions',
+    cell: ({row}) => {
+      return (
+        <BillDialog orderId={row.original.id} title={'View'} />
+      )
+    }
+  }
 ];
+
+export default columns;

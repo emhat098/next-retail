@@ -7,7 +7,7 @@ const createOrder = async (order: Order) => {
   try {
     const customer = await prisma?.customer.create({
       data: {
-        fullname: order.customer.fullName,
+        fullName: order.customer.fullName,
         address: order.customer.address,
         phoneNumber: order.customer.phoneNumber
       }

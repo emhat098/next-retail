@@ -1,10 +1,11 @@
+'use server';
 
 import getOrders, { defaultGetOrdersOrderBy, defaultGetOrderWhere } from "@/actions/order/get-orders";
 import TablePagination from "@/components/product/table-pagination";
 import CommonTable from "@/components/table/common-table";
 import { Order } from "@/types";
 import { FC } from "react";
-import { columns } from "./columns";
+import columns from "./columns";
 
 interface OrderTableProps {
   page: number;

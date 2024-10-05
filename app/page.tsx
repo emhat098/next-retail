@@ -10,7 +10,6 @@ const CustomerOrderForm = dynamic(() => import("@/components/customer/order-form
   loading: () => <div className="text-sm">Loading customer information ...</div>
 });
 
-
 interface Params {
   searchParams: {
     q: string;
