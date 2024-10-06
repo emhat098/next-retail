@@ -40,6 +40,8 @@ const getProducts = async (
         sku: true,
         name: true,
         price: true,
+        salePrice: true,
+        stock: true,
         isDeleted: true,
       },
       skip: (page - 1) * take,

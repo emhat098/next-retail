@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,6 +37,21 @@ const productFormSchema = z.object({
     .min(1, {
       message: 'Price should be at least 1.',
     }),
+  salePrice: z.coerce
+    .number({
+      coerce: true,
+    }),
+  stock: z.coerce
+    .number({
+      coerce: true,
+      required_error: 'Stock is required',
+    })
+    .positive({
+      message: 'Stock must be greater than 0.',
+    })
+    .min(1, {
+      message: 'Stock should be at least 1.',
+    }),
 });
 
 type ProductSchemaType = z.infer<typeof productFormSchema>;
@@ -56,7 +70,9 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
     defaultValues: {
       sku: '',
       name: '',
-      price: 0
+      price: 0,
+      salePrice: 0,
+      stock: 1,
     }
   });
 
@@ -72,7 +88,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
           console.log(err);
         })
     }
-  }, [id, isOpen])
+  }, [id, isOpen, form])
 
   const onSubmit = async (values: ProductSchemaType) => {
     try {
@@ -109,7 +125,7 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
         <DialogHeader>
           <DialogTitle>Add product</DialogTitle>
           <DialogDescription>
-            Make changes to your product here. Click save when you're done.
+            {`Make changes to your product here. Click save when you're done.`}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -142,10 +158,36 @@ const EditProductButton: FC<EditProductButtonProps> = ({ title, id }) => {
             />
             <FormField
               control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="salePrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sale price</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

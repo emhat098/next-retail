@@ -14,6 +14,8 @@ const getProductById = async (id: string): Promise<Product | undefined> => {
         sku: true,
         name: true,
         price: true,
+        salePrice: true,
+        stock: true,
       }
     });
     return products as Product;

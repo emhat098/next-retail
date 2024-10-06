@@ -17,7 +17,9 @@ model Product {
   id        String      @id @default(uuid())
   sku       String      @unique
   name      String
-  price     Int
+  stock     Int         @default(1)
+  price     Int         @default(0)
+  salePrice Int         @default(0)
   isDeleted Boolean     @default(false)
   createdAt DateTime    @default(now())
   updatedAt DateTime?

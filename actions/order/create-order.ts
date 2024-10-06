@@ -26,9 +26,26 @@ const createOrder = async (order: Order) => {
         productId: o.product.id,
         quantity: o.quantity,
       }))
-    })
+    });
 
-    return result.count > 0;
+    const isPlacedOrderSucces = result.count > 0;
+
+    if (isPlacedOrderSucces) {
+      await Promise.allSettled(order.orders.map(async (o) => {
+        await prisma.product.update({
+          where: {
+            id: o.product.id
+          },
+          data: {
+            stock: {
+              decrement: o.quantity,
+            }
+          }
+        })
+      }));
+    }
+
+    return isPlacedOrderSucces;
   } catch (error) {
     console.log(error);
   }

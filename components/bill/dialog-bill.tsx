@@ -11,6 +11,7 @@ interface BillDialogProps {
   title?: string;
   isOpen?: boolean;
   setOpen?: any;
+  disabled?: boolean
 }
 
 const BillDialog: FC<BillDialogProps> = ({  
@@ -20,11 +21,12 @@ const BillDialog: FC<BillDialogProps> = ({
   title,
   isOpen,
   setOpen,
+  disabled = true,
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size={'sm'} onClick={onClick} variant="outline">{title}</Button>
+        <Button disabled={disabled} size={'sm'} onClick={onClick} variant="outline">{title}</Button>
       </DialogTrigger>
       <DialogContent className="w-full !bg-transparent border-none print:shadow-none">
         <DialogTitle>{''}</DialogTitle>

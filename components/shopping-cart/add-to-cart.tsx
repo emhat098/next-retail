@@ -11,21 +11,23 @@ interface AddToCartProps {
 }
 
 const AddToCart: React.FC<AddToCartProps> = ({product}) => {
-  const { addToCart } = useContext(ShoppingCartContext);
+  const { addToCart, carts } = useContext(ShoppingCartContext);
 
   const handleAddToCart = () => {
     addToCart({
       product,
       quantity: 1
     });
-
     toast.success('Added product: ' + product.name + ' to shopping cart');
   }
+
+  const isDisabled = (product.stock <= 0 || carts.find(c => c.quantity >= product.stock));
 
   return (
     <Button
       onClick={handleAddToCart}
       size={'sm'}
+      disabled={isDisabled as boolean}
     >
       {'Add to cart'}
     </Button>

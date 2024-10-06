@@ -29,6 +29,7 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
       )
     },
     footer: () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { totalItem, totalPrice } = useContext(ShoppingCartContext);
       return (
         <div className="flex flex-col gap-2">

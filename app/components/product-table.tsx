@@ -2,8 +2,12 @@
 
 import { FC } from "react";
 import { Product } from "@/types";
-import CommonTable from "@/components/table/common-table";
 import Columns from "./columns";
+import dynamic from "next/dynamic";
+
+const CommonTable  = dynamic(() => import("@/components/table/common-table"), {
+  ssr: false,
+});
 
 interface ProductTableProps {
   products: Product[];

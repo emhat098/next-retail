@@ -13,6 +13,7 @@ import { Order } from '@/types';
 import { toast } from 'sonner';
 import { Textarea } from '../ui/textarea';
 import BillDialog from '../bill/dialog-bill';
+import { useRouter } from 'next/navigation';
 
 const customerSchema = z.object({
   fullName: z.string().min(1, {
@@ -30,6 +31,7 @@ const customerSchema = z.object({
 const CustomerOrderForm = () => {
   const { totalItem, carts, clearCart } = useContext(ShoppingCartContext);
   const [isOpen, setOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
@@ -74,9 +76,14 @@ const CustomerOrderForm = () => {
   }
 
   window.onafterprint = () => {
+    clearCurrentPageState();
+  }
+
+  const clearCurrentPageState = () => {
     clearCart();
     form.reset();
     setOpen(false)
+    router.refresh();
   }
 
   return (
@@ -149,8 +156,12 @@ const CustomerOrderForm = () => {
           <SelectedProducts />
           <div className='flex gap-2'>
             <Button
-              disabled={totalItem === 0}
-              type="submit"
+              disabled={!form.formState.isDirty || totalItem === 0}
+              type="button"
+              onClick={() => {
+                form.handleSubmit(onSubmit)();
+                clearCurrentPageState();
+              }}
             >
               Place order
             </Button>
@@ -169,6 +180,7 @@ const CustomerOrderForm = () => {
               onClick={handleOnPlaceOrderAndPrint}
               isOpen={isOpen}
               setOpen={setOpen}
+              disabled={!form.formState.isDirty || totalItem === 0}
             />
           </div>
         </form>

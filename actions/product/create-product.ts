@@ -19,11 +19,7 @@ const createProduct = async (product: Product) => {
       });
     } else {
       result = await prisma?.product.create({
-        data: {
-          name: product.name,
-          sku: product.sku,
-          price: product.price
-        }
+        data: product,
       });
     }
     return result;
