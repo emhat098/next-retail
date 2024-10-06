@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Package, ShoppingCart, Users, Settings, Menu } from "lucide-react";
 import { FC, PropsWithChildren, useState } from "react";
+import { appConfig } from "@/next.app.config.mjs";
 
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false);
@@ -12,7 +13,7 @@ const Navbar = () => {
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md print:hidden">
       <h1 className="text-2xl font-bold text-gray-800">
-        <Link href={'/'}>Next Retail</Link>
+        <Link href={'/'}>{appConfig.name}</Link>
       </h1>
       <Sheet modal={true} open={isOpen} onOpenChange={setOpen}>
         <SheetTrigger asChild>
