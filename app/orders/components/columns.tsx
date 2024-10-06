@@ -31,7 +31,7 @@ const columns: ColumnDef<Order>[] = [
     header: 'Actions',
     cell: ({row}) => {
       return (
-        <BillDialog orderId={row.original.id} title={'View'} />
+        <BillDialog disabled={false} orderId={row.original.id} title={'View'} />
       )
     }
   }

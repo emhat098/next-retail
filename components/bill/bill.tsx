@@ -7,7 +7,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import CommonTable from "@/components/table/common-table";
 import { OrderItemsBillColumns } from "./order-items-bill-columns";
-import CustomerTable from "./customer-table";
+import ObjectToTable from "@/components/table/object-to-table";
+import formatter from "@/lib/formatter";
 
 interface BillProps {
   orderId?: string;
@@ -53,25 +54,38 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
       <CardContent>
         <div className="flex flex-col">
           <div className="p-2">
-            <h3 className="font-bold">Customer</h3>
+            <h3 className="font-bold">Customer information:</h3>
             < hr />
           </div>
-          <CustomerTable customer={data.customer} />
+          <ObjectToTable data={data.customer} />
         </div>
         <div className="flex flex-col">
           <div className="p-2">
-            <h3 className="font-bold">Ordered items</h3>
+            <h3 className="font-bold">Ordered items:</h3>
             <hr />
           </div>
           <CommonTable
             columns={OrderItemsBillColumns}
             data={data.orders}
           />
+
+          <div className="p-2">
+            <h3 className="font-bold">Grand total:</h3>
+            <hr />
+          </div>
+          <ObjectToTable
+            data={{
+              totalItems: data.orders.length,
+              totalPrice: formatter(data.orders.reduce((total, {product: { salePrice, price }, quantity}) => {
+                return (total + ((salePrice ?? price) * quantity));
+              }, 0), 'vi')
+            }}
+          />
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-center gap-2">
         <p className="text-center ">Thank you for shopping with us!</p>
-        <p className="">{new Date(data.createdAt ?? Date.now()).toLocaleString()}</p>
+        <p className="">Order created at: {new Date(data.createdAt ?? Date.now()).toLocaleString()}</p>
         <div className="flex justify-end w-full mt-4 print:hidden">
           <Button onClick={() => window.print()}>Print</Button>
         </div>

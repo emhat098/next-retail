@@ -158,8 +158,8 @@ const CustomerOrderForm = () => {
             <Button
               disabled={!form.formState.isDirty || totalItem === 0}
               type="button"
-              onClick={() => {
-                form.handleSubmit(onSubmit)();
+              onClick={async () => {
+                await form.handleSubmit(onSubmit)();
                 clearCurrentPageState();
               }}
             >

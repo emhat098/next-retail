@@ -1,7 +1,9 @@
 'use server';
 
+import { GET_PRODUCTS_CACHE_TAG } from '@/next.constants.mjs';
 import prisma from '@/prisma/db';
 import { Product } from '@/types';
+import { revalidateTag } from 'next/cache';
 
 const hideProductByid = async (id: string, isDeleted: boolean = true): Promise<Product | undefined> => {
   try {
@@ -14,6 +16,7 @@ const hideProductByid = async (id: string, isDeleted: boolean = true): Promise<P
         updatedAt: new Date(),
       }
     });
+    revalidateTag(GET_PRODUCTS_CACHE_TAG);
     return result as Product;
   } catch (error) {
     console.log(error);

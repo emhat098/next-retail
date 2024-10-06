@@ -2,6 +2,8 @@
 
 import { Order } from "@/types";
 import prisma from '@/prisma/db';
+import { revalidateTag } from "next/cache";
+import { GET_PRODUCTS_CACHE_TAG } from "@/next.constants.mjs";
 
 const createOrder = async (order: Order) => {
   try {
@@ -44,7 +46,7 @@ const createOrder = async (order: Order) => {
         })
       }));
     }
-
+    revalidateTag(GET_PRODUCTS_CACHE_TAG);
     return isPlacedOrderSucces;
   } catch (error) {
     console.log(error);

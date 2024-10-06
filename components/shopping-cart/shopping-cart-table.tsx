@@ -7,6 +7,7 @@ import { TrashIcon } from "lucide-react";
 import CommonTable from "../table/common-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ShoppingCartItem } from "@/types";
+import formatter from "@/lib/formatter";
 
 interface RemoveCartButtonProps {
   removeFromCart: any;
@@ -29,12 +30,11 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
       )
     },
     footer: () => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { totalItem, totalPrice } = useContext(ShoppingCartContext);
       return (
         <div className="flex flex-col gap-2">
-          <p>Total item: {totalItem}</p>
-          <p>Total price: {totalPrice}</p>
+          <p>Total items: {totalItem}</p>
+          <p>Total price: {formatter(totalPrice, 'vi')}</p>
         </div>
       )
     },
@@ -43,7 +43,7 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
     header: 'Price',
     cell: ({row}) => {
       return (
-        <div>{row.original.product.price}</div>
+        <div>{formatter(row.original.product.salePrice ?? row.original.product.price, 'vi')}</div>
       )
     }
   },
@@ -52,6 +52,16 @@ const columns: ColumnDef<ShoppingCartItem>[] = [
     cell: ({row}) => {
       return (
         <div>{row.original.quantity}</div>
+      )
+    }
+  },
+  {
+    header: 'Total',
+    cell: ({row}) => {
+      return (
+        <div>
+          {formatter((row.original.product.salePrice ?? row.original.product.price) * row.original.quantity, 'vi')}
+        </div>
       )
     }
   },
@@ -82,7 +92,6 @@ const ShoppingCartTable: FC<ShoppingCartTableProps> = () => {
 
   return (
     <CommonTable
-      tableCaption={'Shopping cart items.'}
       data={carts}
       columns={columns}
     />

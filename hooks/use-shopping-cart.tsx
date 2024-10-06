@@ -64,7 +64,7 @@ const useShopppingCart = (cartItems: ShoppingCartItem[]) => {
    */
   const totalPrice = useMemo(() => {
     return carts.reduce((total, cart) => {
-      return total + cart.quantity * cart.product.price;
+      return total + cart.quantity * (cart.product.salePrice ?? cart.product.price);
     }, 0);
   }, [carts]);
 

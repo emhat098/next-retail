@@ -26,6 +26,7 @@ const getOrderById = async (id: string): Promise<Order | undefined> => {
                 name: true,
                 sku: true,
                 price: true,
+                salePrice: true,
               }
             }
           },

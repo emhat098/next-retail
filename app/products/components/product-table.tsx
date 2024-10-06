@@ -5,6 +5,7 @@ import ProductList from "@/components/product/product-table";
 import TablePagination from "@/components/product/table-pagination";
 import { Product } from "@/types";
 import { FC } from "react";
+import { unstable_cache as cache, revalidateTag} from 'next/cache';
 
 interface ProductTableProps {
   page: number;

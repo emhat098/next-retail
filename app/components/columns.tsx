@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShoppingCartContext } from "@/providers/shopping-cart-provider";
 import { useContext } from "react";
+import formatter from "@/lib/formatter";
 
 const Columns: ColumnDef<Product>[] = [
   {
@@ -25,6 +26,9 @@ const Columns: ColumnDef<Product>[] = [
   {
     header: 'Price',
     accessorKey: 'price',
+    cell: ({row}) => {
+      return <div className="font-bold">{formatter(row.original.price, 'vi')}</div>
+    }
   },
   {
     header: 'Sale Price',
@@ -45,7 +49,7 @@ const Columns: ColumnDef<Product>[] = [
         );
       }
       return (
-        <span className="font-bold">{row.original.salePrice}</span>
+        <span className="font-bold">{formatter(row.original.salePrice, 'vi')}</span>
       )
     }
   },

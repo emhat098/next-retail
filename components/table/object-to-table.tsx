@@ -1,11 +1,10 @@
 'use client';
 
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Customer } from "@/types";
+import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";
 import { FC } from "react";
 
-interface CustomerTableProps {
-  customer: Customer;
+interface ObjectToTableProps<T> {
+  data: T;
 }
 
 const formatKey = (key: string) => {
@@ -14,14 +13,14 @@ const formatKey = (key: string) => {
     .replace(/^[a-z]/, (char) => char.toUpperCase()); // Capitalize the first letter of the string
 };
 
-const CustomerTable: FC<CustomerTableProps> = ({ customer }) => {
+const ObjectToTable: FC<ObjectToTableProps<any>> = <T, >({ data }: ObjectToTableProps<T>) => {
   return (
     <Table>
       <TableBody>
-        {Object.entries(customer).map(([key, value]) => (
+        {Object.entries(data as object).map(([key, value]) => (
           <TableRow key={key}>
             <TableCell>{formatKey(key)}</TableCell>
-            <TableCell>{value}</TableCell>
+            <TableCell>{value as any}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -29,4 +28,4 @@ const CustomerTable: FC<CustomerTableProps> = ({ customer }) => {
   );
 }
 
-export default CustomerTable;
+export default ObjectToTable;

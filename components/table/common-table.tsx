@@ -68,7 +68,7 @@ const CommonTable: FC<CommonTableProps<any>> = <T, >({ data, columns, tableCapti
           </TableRow>
         )}
       </TableBody>
-      {table.getFooterGroups().length > 1 && (
+      {table.getFooterGroups().length > 0 && (
         <TableFooter>
           {table.getFooterGroups().map(footerGroup => (
             <TableRow key={footerGroup.id}>

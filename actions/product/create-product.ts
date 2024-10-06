@@ -3,6 +3,8 @@
 import { Product } from "@/types";
 import prisma from '@/prisma/db';
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { revalidateTag } from "next/cache";
+import { GET_PRODUCTS_CACHE_TAG } from "@/next.constants.mjs";
 
 const createProduct = async (product: Product) => {
   try {
@@ -22,6 +24,8 @@ const createProduct = async (product: Product) => {
         data: product,
       });
     }
+
+    revalidateTag(GET_PRODUCTS_CACHE_TAG);
     return result;
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
