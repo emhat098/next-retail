@@ -18,16 +18,6 @@ interface BillProps {
 
 const Bill: FC<BillProps> = ({ orderId, order }) => {
   const [data, setData] = useState<Order>();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const generatePDF = () => {
-    setIsLoading(true);
-    const doc = generateBillPDF(data as Order);
-    doc.output('dataurlnewwindow', {
-      filename: order?.id
-    });
-    setIsLoading(false);
-  };
 
   useEffect(() => {
     if (orderId) {
@@ -51,7 +41,7 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
   }
 
   return (
-    <Card className="w-full text-xs mx-auto print:border-none print:shadow-none">
+    <Card className="w-full text-xs mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold text-primary">
           {appConfig.name}
@@ -97,13 +87,34 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
       <CardFooter className="flex flex-col items-center gap-2">
         <p className="text-center ">Thank you for shopping with us!</p>
         <p className="">Order created at: {new Date(data.createdAt ?? Date.now()).toLocaleString()}</p>
-        <div className="flex justify-end w-full mt-4 print:hidden">
-          <Button disabled={isLoading} onClick={generatePDF}>
-            {isLoading ? "Generating PDF..." : "Print"}
-          </Button>
+        <div className="flex justify-end w-full mt-4">
+          <PrintButton data={order as Order} />
         </div>
       </CardFooter>
     </Card>
+  )
+}
+
+interface PrintButtonProps {
+  data: Order;
+}
+
+const PrintButton: FC<PrintButtonProps> = ({data}) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const generatePDF = () => {
+    setIsLoading(true);
+    const doc = generateBillPDF(data as Order);
+    doc.output('dataurlnewwindow', {
+      filename: data?.id
+    });
+    setIsLoading(false);
+  };
+
+  return (
+    <Button disabled={isLoading} onClick={generatePDF}>
+      {isLoading ? "Generating PDF..." : "Print"}
+    </Button>
   )
 }
 
