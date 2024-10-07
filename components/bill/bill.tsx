@@ -88,7 +88,7 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
         <p className="text-center ">Thank you for shopping with us!</p>
         <p className="">Order created at: {new Date(data.createdAt ?? Date.now()).toLocaleString()}</p>
         <div className="flex justify-end w-full mt-4">
-          <PrintButton data={order as Order} />
+          <PrintButton data={data} />
         </div>
       </CardFooter>
     </Card>

@@ -1,4 +1,3 @@
-import ObjectToTable from "@/components/table/object-to-table";
 import { appConfig } from "@/next.app.config.mjs";
 import { BASE_URL } from "@/next.constants.mjs";
 import { Order } from "@/types";
