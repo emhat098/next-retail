@@ -1,7 +1,7 @@
 'use client';
 
 import { Order } from "@/types";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { appConfig } from '@/next.app.config.mjs';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import CommonTable from "@/components/table/common-table";
 import { OrderItemsBillColumns } from "./order-items-bill-columns";
 import ObjectToTable from "@/components/table/object-to-table";
 import formatter from "@/lib/formatter";
+import generateBillPDF from "@/lib/generate-bill-pdf";
 
 interface BillProps {
   orderId?: string;
@@ -17,6 +18,16 @@ interface BillProps {
 
 const Bill: FC<BillProps> = ({ orderId, order }) => {
   const [data, setData] = useState<Order>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const generatePDF = () => {
+    setIsLoading(true);
+    const doc = generateBillPDF(data as Order);
+    doc.output('dataurlnewwindow', {
+      filename: order?.id
+    });
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     if (orderId) {
@@ -87,7 +98,9 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
         <p className="text-center ">Thank you for shopping with us!</p>
         <p className="">Order created at: {new Date(data.createdAt ?? Date.now()).toLocaleString()}</p>
         <div className="flex justify-end w-full mt-4 print:hidden">
-          <Button onClick={() => window.print()}>Print</Button>
+          <Button disabled={isLoading} onClick={generatePDF}>
+            {isLoading ? "Generating PDF..." : "Print"}
+          </Button>
         </div>
       </CardFooter>
     </Card>

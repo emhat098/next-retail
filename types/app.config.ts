@@ -4,4 +4,5 @@ export interface AppConfig {
   address: string;
   description: string;
   loganText: string;
+  thankMessage: string;
 }

@@ -1,6 +1,7 @@
 {
   "name": "My My Sai Gon",
   "phoneNumber": "(84) 945 90 66 33",
-  "address": "D16, Dinh Duc Thien Stree, Binh Chanh, Ho Chi Minh City, Vietnam",
-  "description": "<p>Working hours: Every day of the week.</p>"
+  "address": "D16, Dinh Duc Thien Street, Binh Chanh, Ho Chi Minh City, Vietnam",
+  "description": "Working hours: Every day of the week.",
+  "thankMessage": "Thank you for shopping with us!"
 }
