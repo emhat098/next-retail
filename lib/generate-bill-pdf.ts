@@ -19,6 +19,7 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
   const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+  const startX = 6;
 
   let startY = 20;
   let baseFontSize = 11;
@@ -49,13 +50,13 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Customer information:', 12, startY += 10);
-  doc.line(12, startY+= 2, pageWidth - 12, startY);
+  doc.text('Customer information:', startX, startY += 10);
+  doc.line(startX, startY+= 2, pageWidth - startX, startY);
 
   autoTable(doc, {
     theme: 'plain',
     startY: startY += 1,
-    margin: 11,
+    margin: [0, startX, 0, startX],
     body: [
       ['Full name', order.customer.fullName],
       ['Phone number',order.customer.phoneNumber],
@@ -72,15 +73,15 @@ const generateBillPDF = (order: Order): jsPDF => {
       if (data.column.index === 0) {
         data.cell.styles.cellWidth = 20;
       }
-    }
+    },
   });
 
   const maxLine = Math.round(order.customer.address.length / pageWidth);
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Ordered items:', 12, startY += 20  + (maxLine * 4));
-  doc.line(12, startY+= 2, pageWidth - 12, startY);
+  doc.text('Ordered items:', startX, startY += 20  + (maxLine * 4));
+  doc.line(startX, startY+= 2, pageWidth - startX, startY);
 
   const body = order.orders.map((o) => [
     o.product.name,
@@ -93,7 +94,7 @@ const generateBillPDF = (order: Order): jsPDF => {
   autoTable(doc, {
     theme: 'plain',
     startY: startY += 2,
-    margin: 10,
+    margin: [0, startX, 0, startX],
     head: [['Name', 'Price', 'Quantity', 'Total']],
     body: [
       ...body,
@@ -117,13 +118,13 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Grand total:', 12, startY += (body.length * 2) + 20);
-  doc.line(12, startY+= 2, pageWidth - 12, startY);
+  doc.text('Grand total:', startX, startY += (body.length * 7) + 4 + 7);
+  doc.line(startX, startY+= 2, pageWidth - startX, startY);
 
   autoTable(doc, {
     theme: 'plain',
     startY: startY += 1,
-    margin: 11,
+    margin: [0, startX, 0, startX],
     body: [
       ['Total Items', order.orders.length],
       ['Total Price',
