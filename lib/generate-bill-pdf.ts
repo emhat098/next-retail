@@ -9,8 +9,9 @@ const generateBillPDF = (order: Order): jsPDF => {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
-    format: [80, 297]
+    format: [80, 297],
   });
+
   doc.addFont(BASE_URL + '/fonts/Roboto-Bold.ttf', 'RobotoBold', 'bold');
   doc.addFont(BASE_URL + '/fonts/Roboto-Italic.ttf', 'RobotoItalic', 'italic');
   doc.addFont(BASE_URL + '/fonts/Roboto-Regular.ttf', 'RobotoNormal', 'normal');
@@ -20,7 +21,7 @@ const generateBillPDF = (order: Order): jsPDF => {
   const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
 
   let startY = 20;
-  let baseFontSize = 9;
+  let baseFontSize = 11;
 
   // Header.
   doc.setFontSize(baseFontSize);
@@ -32,7 +33,7 @@ const generateBillPDF = (order: Order): jsPDF => {
   // Introduction section:
   doc.setFont('RobotoNormal', 'normal', 'normal');
   doc.setFontSize(baseFontSize - 4);
-  doc.text(appConfig.address, pageWidth / 2, startY += 4, {
+  doc.text(appConfig.address, pageWidth / 2, startY += 6, {
     align: 'center',
   });
 
@@ -48,7 +49,7 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Customer information:', 12, startY += 6);
+  doc.text('Customer information:', 12, startY += 10);
   doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   autoTable(doc, {
@@ -78,7 +79,7 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Ordered items:', 12, startY += 10  + (maxLine * 4));
+  doc.text('Ordered items:', 12, startY += 20  + (maxLine * 4));
   doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   const body = order.orders.map((o) => [
@@ -95,8 +96,6 @@ const generateBillPDF = (order: Order): jsPDF => {
     margin: 10,
     head: [['Name', 'Price', 'Quantity', 'Total']],
     body: [
-      ...body,
-      ...body,
       ...body,
     ],
     headStyles: {
@@ -118,7 +117,7 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.setFontSize(baseFontSize - 2);
-  doc.text('Grand total:', 12, startY += (body.length * 2) + 25);
+  doc.text('Grand total:', 12, startY += (body.length * 2) + 20);
   doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   autoTable(doc, {
@@ -150,7 +149,7 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   // Footer
   doc.setFontSize(baseFontSize - 4);
-  doc.text(appConfig.thankMessage, pageWidth / 2, startY += 14, {
+  doc.text(appConfig.thankMessage, pageWidth / 2, startY += 16, {
     align: 'center'
   });
 
