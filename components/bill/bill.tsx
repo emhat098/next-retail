@@ -10,6 +10,7 @@ import { OrderItemsBillColumns } from "./order-items-bill-columns";
 import ObjectToTable from "@/components/table/object-to-table";
 import formatter from "@/lib/formatter";
 import generateBillPDF from "@/lib/generate-bill-pdf";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 interface BillProps {
   orderId?: string;
@@ -53,36 +54,39 @@ const Bill: FC<BillProps> = ({ orderId, order }) => {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col">
-          <div className="p-2">
-            <h3 className="font-bold">Customer information:</h3>
-            < hr />
+        <ScrollArea className="h-[40vh]">
+          <ScrollBar orientation={'horizontal'} />
+          <div className="flex flex-col">
+            <div className="p-2">
+              <h3 className="font-bold">Customer information:</h3>
+              < hr />
+            </div>
+            <ObjectToTable data={data.customer} />
           </div>
-          <ObjectToTable data={data.customer} />
-        </div>
-        <div className="flex flex-col">
-          <div className="p-2">
-            <h3 className="font-bold">Ordered items:</h3>
-            <hr />
-          </div>
-          <CommonTable
-            columns={OrderItemsBillColumns}
-            data={data.orders}
-          />
+          <div className="flex flex-col">
+            <div className="p-2">
+              <h3 className="font-bold">Ordered items:</h3>
+              <hr />
+            </div>
+            <CommonTable
+              columns={OrderItemsBillColumns}
+              data={data.orders}
+            />
 
-          <div className="p-2">
-            <h3 className="font-bold">Grand total:</h3>
-            <hr />
+            <div className="p-2">
+              <h3 className="font-bold">Grand total:</h3>
+              <hr />
+            </div>
+            <ObjectToTable
+              data={{
+                totalItems: data.orders.length,
+                totalPrice: formatter(data.orders.reduce((total, {product: { salePrice, price }, quantity}) => {
+                  return (total + ((salePrice ?? price) * quantity));
+                }, 0), 'vi')
+              }}
+            />
           </div>
-          <ObjectToTable
-            data={{
-              totalItems: data.orders.length,
-              totalPrice: formatter(data.orders.reduce((total, {product: { salePrice, price }, quantity}) => {
-                return (total + ((salePrice ?? price) * quantity));
-              }, 0), 'vi')
-            }}
-          />
-        </div>
+        </ScrollArea>
       </CardContent>
       <CardFooter className="flex flex-col items-center gap-2">
         <p className="text-center ">Thank you for shopping with us!</p>
