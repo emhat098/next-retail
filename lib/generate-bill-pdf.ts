@@ -6,7 +6,11 @@ import autoTable from 'jspdf-autotable';
 import formatter from "./formatter";
 
 const generateBillPDF = (order: Order): jsPDF => {
-  var doc = new jsPDF();
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: [80, 297]
+  });
   doc.addFont(BASE_URL + '/fonts/Roboto-Bold.ttf', 'RobotoBold', 'bold');
   doc.addFont(BASE_URL + '/fonts/Roboto-Italic.ttf', 'RobotoItalic', 'italic');
   doc.addFont(BASE_URL + '/fonts/Roboto-Regular.ttf', 'RobotoNormal', 'normal');
@@ -16,9 +20,10 @@ const generateBillPDF = (order: Order): jsPDF => {
   const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
 
   let startY = 20;
+  let baseFontSize = 9;
 
   // Header.
-  doc.setFontSize(30);
+  doc.setFontSize(baseFontSize);
   doc.setFont('RobotoBold', 'normal', 'bold');
   doc.text(appConfig.name, pageWidth / 2, startY, {
     align: 'center',
@@ -26,44 +31,45 @@ const generateBillPDF = (order: Order): jsPDF => {
 
   // Introduction section:
   doc.setFont('RobotoNormal', 'normal', 'normal');
-  doc.setFontSize(12);
-  doc.text(appConfig.address, pageWidth / 2, startY += 10, {
+  doc.setFontSize(baseFontSize - 4);
+  doc.text(appConfig.address, pageWidth / 2, startY += 4, {
     align: 'center',
   });
 
-  doc.setFontSize(12);
-  doc.text("Phone: " + appConfig.phoneNumber, pageWidth / 2, startY += 7, {
+  doc.setFontSize(baseFontSize - 4);
+  doc.text("Phone: " + appConfig.phoneNumber, pageWidth / 2, startY += 4, {
     align: 'center',
   });
 
-  doc.setFontSize(12);
-  doc.text(appConfig.description, pageWidth / 2, startY += 7, {
+  doc.setFontSize(baseFontSize - 4);
+  doc.text(appConfig.description, pageWidth / 2, startY += 4, {
     align: 'center',
   });
 
   doc.setFont('RobotoBold', 'normal', 'bold');
-  doc.text('Customer information:', 12, startY += 15);
-  doc.line(12, startY+= 2, pageWidth - 12, startY+= 1);
+  doc.setFontSize(baseFontSize - 2);
+  doc.text('Customer information:', 12, startY += 6);
+  doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   autoTable(doc, {
     theme: 'plain',
-    startY: startY += 2,
-    margin: 10,
+    startY: startY += 1,
+    margin: 11,
     body: [
       ['Full name', order.customer.fullName],
       ['Phone number',order.customer.phoneNumber],
       ['Address', order.customer.address],
     ],
     headStyles: { fillColor: [255, 255, 255] },
-    bodyStyles: { fontSize: 14, cellPadding: 2 },
+    bodyStyles: { fontSize: baseFontSize - 4, cellPadding: 1 },
     styles: {
-      fontSize: 11,
+      fontSize: baseFontSize - 4,
       font: 'RobotoNormal',
       fontStyle: 'normal',
     },
     didParseCell: (data) => {
       if (data.column.index === 0) {
-        data.cell.styles.cellWidth = 40;
+        data.cell.styles.cellWidth = 20;
       }
     }
   });
@@ -71,8 +77,9 @@ const generateBillPDF = (order: Order): jsPDF => {
   const maxLine = Math.round(order.customer.address.length / pageWidth);
 
   doc.setFont('RobotoBold', 'normal', 'bold');
-  doc.text('Ordered items:', 12, startY += 40 + (maxLine * 10));
-  doc.line(12, startY+= 2, pageWidth - 12, startY+= 1);
+  doc.setFontSize(baseFontSize - 2);
+  doc.text('Ordered items:', 12, startY += 10  + (maxLine * 4));
+  doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   const body = order.orders.map((o) => [
     o.product.name,
@@ -88,33 +95,36 @@ const generateBillPDF = (order: Order): jsPDF => {
     margin: 10,
     head: [['Name', 'Price', 'Quantity', 'Total']],
     body: [
-      ...body
+      ...body,
+      ...body,
+      ...body,
     ],
     headStyles: {
       textColor: [0, 0, 0],
       fontStyle: 'bold',
-      fontSize: 14,
+      fontSize: baseFontSize - 4,
       font: 'RobotoBold',
     },
     bodyStyles: {
-      fontSize: 14,
+      fontSize: baseFontSize - 4,
       cellPadding: 2
     },
     styles: {
-      fontSize: 14,
+      fontSize: baseFontSize - 4,
       font: 'RobotoNormal',
       fontStyle: 'normal',
     }
   });
 
   doc.setFont('RobotoBold', 'normal', 'bold');
-  doc.text('Grand total:', 12, startY += 30);
-  doc.line(12, startY+= 2, pageWidth - 12, startY+= 1);
+  doc.setFontSize(baseFontSize - 2);
+  doc.text('Grand total:', 12, startY += (body.length * 2) + 25);
+  doc.line(12, startY+= 2, pageWidth - 12, startY);
 
   autoTable(doc, {
     theme: 'plain',
-    startY: startY += 2,
-    margin: 10,
+    startY: startY += 1,
+    margin: 11,
     body: [
       ['Total Items', order.orders.length],
       ['Total Price',
@@ -124,16 +134,13 @@ const generateBillPDF = (order: Order): jsPDF => {
       ],
     ],
     headStyles: { fillColor: [255, 255, 255] },
-    bodyStyles: { fontSize: 14, cellPadding: 2 },
+    bodyStyles: { fontSize: baseFontSize - 4, cellPadding: 1 },
     styles: {
-      fontSize: 11,
+      fontSize: baseFontSize - 4,
       font: 'RobotoNormal',
       fontStyle: 'normal',
     },
     didParseCell: (data) => {
-      if (data.column.index === 0) {
-        data.cell.styles.cellWidth = 40;
-      }
       if (data.column.index === 1) {
         data.cell.styles.font = 'RobotoBold';
         data.cell.styles.fontStyle = 'bold';
@@ -142,13 +149,13 @@ const generateBillPDF = (order: Order): jsPDF => {
   });
 
   // Footer
-  doc.setFontSize(12);
-  doc.text(appConfig.thankMessage, pageWidth / 2, startY += 40, {
+  doc.setFontSize(baseFontSize - 4);
+  doc.text(appConfig.thankMessage, pageWidth / 2, startY += 14, {
     align: 'center'
   });
 
-  doc.setFontSize(12);
-  doc.text(new Date(order.createdAt ?? Date.now()).toLocaleString(), pageWidth / 2, startY += 5, {
+  doc.setFontSize(baseFontSize - 4);
+  doc.text(new Date(order.createdAt ?? Date.now()).toLocaleString(), pageWidth / 2, startY += 4, {
     align: 'center'
   });
 
